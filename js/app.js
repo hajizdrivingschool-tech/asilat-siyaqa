@@ -77,7 +77,7 @@
     if (S.view === 'home') {
       h = top(t('app'), false) + '<p>' + t('pick') + '</p><div class="dq-grid">' + CATEGORIES.map(function (x, i) {
         var n = x.questions.length;
-        return '<button class="dq-card" data-act="cat:' + i + '"><span class="dq-ph">' + (x.image ? '<img src="' + x.image + '" alt="">' : '') + '<span class="dq-badge">' + n + ' ' + t('questions') + '</span>' + (BRAND ? '<span class="dq-by">' + BRAND + CHECK + '</span>' : '') + '</span><b>' + x.title[lang] + '</b></button>';
+        return '<button class="dq-card" data-act="cat:' + i + '"><span class="dq-ph">' + (x.image ? '<img src="' + x.image + '" alt="">' : '') + '<span class="dq-badge">' + n + ' ' + t('questions') + '</span></span><span class="dq-row"><b>' + x.title[lang] + '</b>' + (BRAND ? '<span class="dq-by">' + BRAND + CHECK + '</span>' : '') + '</span></button>';
       }).join('') + '</div>';
     } else {
       h = top(c.title[lang], true) + '<div class="dq-tabs">' + partsOf(c).map(function (p, k) {
