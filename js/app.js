@@ -5,16 +5,12 @@
   var PART_SIZE = 30; // questions per tab: 1-30, 31-60, ...
   var CATEGORIES = window.CATEGORIES || [];
 
-  var T = {
-    ar: { app: 'اختبار النظرية', pick: 'اختر قسماً', q: 'سؤال', score: 'الإجابات الصحيحة', retry: 'إعادة المحاولة', home: 'الرئيسية', questions: 'سؤال', best: 'الأفضل', lang: 'English', tag: 'تمرّن قبل الامتحان، وبالتوفيق!' },
-    en: { app: 'Theory test', pick: 'Choose a category', q: 'Question', score: 'Correct answers', retry: 'Try again', home: 'Home', questions: 'questions', best: 'Best', lang: 'العربية', tag: 'Practice before your test. Good luck!' }
-  };
+  var T = { app: 'اختبار النظرية', pick: 'اختر قسماً', q: 'سؤال', score: 'الإجابات الصحيحة', retry: 'إعادة المحاولة', home: 'الرئيسية', questions: 'سؤال', best: 'الأفضل', tag: 'تمرّن قبل الامتحان، وبالتوفيق!' };
 
   var root = document.getElementById('dq-app');
-  var lang = 'ar';
   var S = { view: 'home' };
 
-  function t(k) { return T[lang][k]; }
+  function t(k) { return T[k]; }
 
   function shuffle(a) {
     var b = a.slice(), i, j, x;
@@ -51,8 +47,8 @@
   }
 
   function top(title, back) {
-    var left = back ? '<button data-act="home">' + t('home') + '</button>' : '<span></span>';
-    return '<div class="dq-top">' + left + '<b>' + title + '</b><button data-act="lang">' + t('lang') + '</button></div>';
+    var left = '<span class="dq-side">' + (back ? '<button data-act="home">' + t('home') + '</button>' : '') + '</span>';
+    return '<div class="dq-top">' + left + '<b>' + title + '</b><span class="dq-side"></span></div>';
   }
 
   function qHTML(i) {
@@ -72,15 +68,15 @@
   }
 
   function draw() {
-    root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    root.setAttribute('dir', 'rtl');
     var h = '', c = S.cat, i;
     if (S.view === 'home') {
       h = top(t('app'), false) + '<p>' + t('pick') + '</p><div class="dq-grid">' + CATEGORIES.map(function (x, i) {
         var n = x.questions.length;
-        return '<button class="dq-card" data-act="cat:' + i + '"><span class="dq-ph">' + (x.image ? '<img src="' + x.image + '" alt="">' : '') + '<span class="dq-badge">' + n + ' ' + t('questions') + '</span></span><span class="dq-row"><b>' + x.title[lang] + '</b>' + (BRAND ? '<span class="dq-by">' + BRAND + CHECK + '</span>' : '') + '</span></button>';
+        return '<button class="dq-card" data-act="cat:' + i + '"><span class="dq-ph">' + (x.image ? '<img src="' + x.image + '" alt="">' : '') + '<span class="dq-badge">' + n + ' ' + t('questions') + '</span></span><span class="dq-row"><b>' + x.title.ar + '</b>' + (BRAND ? '<span class="dq-by">' + BRAND + CHECK + '</span>' : '') + '</span></button>';
       }).join('') + '</div>';
     } else {
-      h = top(c.title[lang], true) + '<div class="dq-tabs">' + partsOf(c).map(function (p, k) {
+      h = top(c.title.ar, true) + '<div class="dq-tabs">' + partsOf(c).map(function (p, k) {
         return '<button class="dq-tab' + (k === S.pi ? ' dq-on' : '') + '" data-act="part:' + k + '">' + p.label + '</button>';
       }).join('') + '</div><div class="dq-sc">' + t('score') + ': <b id="dq-sc">' + S.score + ' / ' + S.qs.length + '</b> &nbsp;|&nbsp; ' + t('best') + ': <b id="dq-best">' + getBest() + ' / ' + S.qs.length + '</b></div>';
       for (i = 0; i < S.qs.length; i++) h += qHTML(i);
@@ -104,8 +100,7 @@
       document.getElementById('dq-best').textContent = getBest() + ' / ' + S.qs.length;
       return;
     }
-    if (k === 'lang') lang = lang === 'ar' ? 'en' : 'ar';
-    else if (k === 'home') {
+    if (k === 'home') {
       // go through history so the in-app Home button and the phone Back button agree
       if (S.view !== 'home' && history.state && history.state.v === 'cat') { history.back(); return; }
       S = { view: 'home' };
